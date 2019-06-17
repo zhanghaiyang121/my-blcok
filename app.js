@@ -1,5 +1,6 @@
 const querystring =require('querystring')
 const { get, set } = require('./src/db/redis')
+const { access } = require('./src/utils/log')
 const handleUserRouter=require("./src/router/user")
 const handleBlogRouter=require("./src/router/blog")
 
@@ -41,7 +42,10 @@ const getPostData=(req)=>{
 }
 
 const serverHandle=(req,res)=>{
-        // 设置返回格式 JSON
+    //记录access_log
+    access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
+
+    // 设置返回格式 JSON
         res.setHeader("content-type","application/json")
 
         //获取psth
