@@ -47,6 +47,9 @@ const serverHandle=(req,res)=>{
         //获取psth
         const url=req.url
         req.path=url.split("?")[0]
+
+        //解析query
+        req.query=querystring.parse(url.split("?")[1])
         
         // 解析 cookie
         req.cookie = {}
@@ -60,26 +63,6 @@ const serverHandle=(req,res)=>{
             const val = arr[1].trim()
             req.cookie[key] = val
         })
-
-        // // 解析 session
-        // let needSetCookie = false
-        // let userId = req.cookie.userId
-        // if (userId) {
-        //     if (!SESSION_DATA[userId]) {
-        //         SESSION_DATA[userId]={}
-        //     }
-        // }else{
-        //     needSetCookie=true
-        //     userId = `${Date.now()}_${Math.random()}`
-        //     SESSION_DATA[userId]={}
-        // }
-        // req.session=SESSION_DATA[userId]
-        // console.log(req.session)
-
-        
-
-        //解析query
-        req.query=querystring.parse(url.split("?")[1])
 
         //解析session
         let needSetCookie = false
