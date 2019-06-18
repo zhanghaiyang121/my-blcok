@@ -1,19 +1,17 @@
 const querystring =require('querystring')
 const { get, set } = require('./src/db/redis')
 const { access } = require('./src/utils/log')
-const handleUserRouter=require("./src/router/user")
-const handleBlogRouter=require("./src/router/blog")
+const handleUserRouter=require("./src/router/user")//处理user路由
+const handleBlogRouter=require("./src/router/blog")//处理blog路由
 
-// dev:process.env.NODE_ENV
-
-//创建cookie的时候设置cookie 的过期时间
+//设置cookie 的过期时间的方法
 const getCookieExpires = () => {
     const d = new Date()
-    d.setTime(d.getTime() + (24 * 60 * 60 * 1000))
+    d.setTime(d.getTime() + (2 * 60 * 60 * 1000))
     return d.toGMTString()
 }
 
-//用于处理postdata
+//处理postdata的方法
 const getPostData=(req)=>{
     const promise=new Promise((resolve,reject)=>{
         if(req.method!=="POST"){
@@ -58,6 +56,7 @@ const serverHandle=(req,res)=>{
         // 解析 cookie
         req.cookie = {}
         const cookieStr = req.headers.cookie || ''  // k1=v1;k2=v2;k3=v3
+        // console.log(req.headers.cookie.getMaxAge())
         cookieStr.split(';').forEach(item => {
             if (!item) {
                 return
@@ -89,18 +88,19 @@ const serverHandle=(req,res)=>{
                 // 设置 session
                 req.session = sessionData
             }
-            console.log('req.session ', req.session)
 
             // 处理 post data
             return getPostData(req)
         }).then(postData=>{
             req.body=postData
+
             const blogResult=handleBlogRouter(req,res)
-            
+            console.log(blogResult)
             if(blogResult){
                 blogResult.then(blogData=>{
+                    console.log(blogData)
                     if(needSetCookie){
-                        res.setHeader('Set-Cookie',`userId=${userId};path=/;httpOnly;expres=${getCookieExpires()}`) 
+                        res.setHeader('Set-Cookie',`userId=${userId};path=/;httpOnly;expires=${getCookieExpires()}`) 
                     }
                     res.end(JSON.stringify(blogData))
                 })
@@ -111,7 +111,7 @@ const serverHandle=(req,res)=>{
             if(userResult){
                 userResult.then(userData=>{
                     if(needSetCookie){
-                        res.setHeader('Set-Cookie',`userId=${userId};path=/;httpOnly;expres=${getCookieExpires()}`) 
+                        res.setHeader('Set-Cookie',`userId=${userId};path=/;httpOnly;expires=${getCookieExpires()}`) 
                     }
                     res.end(JSON.stringify(userData))
                 })

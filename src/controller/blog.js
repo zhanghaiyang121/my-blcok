@@ -26,7 +26,7 @@ const getDetail=(id)=>{
 //新建博客
 const newBlog=(blogData={})=>{
     const title = xss(blogData.title)
-    const content = blogData.content
+    const content = xss(blogData.content)
     const author = blogData.author
     const createTime = Date.now()
 
@@ -61,7 +61,9 @@ const updateBlog=(id,blogData={})=>{
 
 //删除博客
 const delBlog=(id,author)=>{
-    const sql = `delete from blogs where id='${id}' and author='${author}';`
+    //优化不删除数据，改变数据的状态 0代表没有删除 1代表已经删除
+    // const sql = `delete from blogs where id='${id}' and author='${author}';`
+    const sql = `delete from blogs where id='${id}';`
     return exec(sql).then(delData => {
         if (delData.affectedRows > 0) {
             return true

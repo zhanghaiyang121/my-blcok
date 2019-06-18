@@ -15,11 +15,6 @@ const handleBlogRouter=(req,res)=>{
     const id = req.query.id
     //获取博客列表
     if(method==="GET"&&req.path==="/api/blog/list"){
-        const loginCheckResult = loginCheck(req)
-        if (loginCheckResult) {
-            // 未登录
-            return loginCheckResult
-        }
         const author=req.query.author||''
         const keyword=req.query.keyword||''
         const result =getList(author,keyword)

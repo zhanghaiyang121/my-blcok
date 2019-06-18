@@ -30,6 +30,7 @@
         }
 
         $('#btnLogin').click(() => {
+            alert(1)
             const username = $('#textUsername').val()
             const password = $('#textPassword').val()
             const url = '/api/user/login'
@@ -40,8 +41,8 @@
             post(url, data).then(res => {
                 if (res.errno === 0) {
                     // 登录成功
-                    console.log(res)
-                    location.href = './admin.html'
+                    alert(JSON.stringify(res))
+                    // location.href = './admin.html'
                 } else {
                     // 登录失败
                     alert(res.message)
