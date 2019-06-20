@@ -30,6 +30,10 @@ const newBlog=(blogData={})=>{
     const author = blogData.author
     const createTime = Date.now()
 
+    // const sql = `
+    //     insert into blogs (title, content, createtime, author)
+    //     values ('${title}', '${content}', ${createTime}, '${author}');
+    // `
     const sql = `
         insert into blogs (title, content, createtime, author)
         values ('${title}', '${content}', ${createTime}, '${author}');
@@ -45,7 +49,7 @@ const newBlog=(blogData={})=>{
 //更新博客
 const updateBlog=(id,blogData={})=>{
     const title = blogData.title
-    const content = blogData.content
+    const content = xss(blogData.content)
 
     const sql = `
         update blogs set title='${title}', content='${content}' where id=${id}

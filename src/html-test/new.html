@@ -68,7 +68,8 @@
             const url = '/api/blog/new'
             const data = {
                 title,
-                content
+                content,
+                author:localStorage.getItem('author')
             }
             post(url, data).then(res => {
                 if (res.errno !== 0) {
